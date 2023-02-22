@@ -77,6 +77,7 @@ export default function App() {
               >
                 <Tab.Screen
                   name="TabHome"
+                  navigationOption={{}}
                   options={{
                     headerBackground: (
                       <Image style={StyleSheet.absoluteFill} source={logo} />
