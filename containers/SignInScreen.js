@@ -15,7 +15,7 @@ import {
 import axios, { Axios } from "axios";
 import logo from "../assets/airbnb_logo.png";
 
-export default function SignInScreen({ setToken }) {
+export default function SignInScreen({ userToken, setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -29,10 +29,12 @@ export default function SignInScreen({ setToken }) {
       );
 
       if (response.data.token) {
-        // si le token existe dans la BDD de l'API, alors l'utilisateur est redirigé sur la Screen Home
+        // si le token existe dans la mémoire du smartphone, alors l'utilisateur est redirigé sur la Screen Home
         setToken(response.data.token);
         alert("Connected");
-        navigation.navigate("Home");
+        if (userToken) {
+          navigation.navigate("Home");
+        }
       }
     } catch (error) {
       // si un champs n'est pas rempli et que le message d'erreur se déclenche, un message d'erreur est attitré
@@ -60,6 +62,7 @@ export default function SignInScreen({ setToken }) {
             value={email}
             placeholder="email"
             style={styles.input}
+            autoCapitalize="none"
             onChangeText={(input) => {
               setEmail(input);
             }}
@@ -68,6 +71,7 @@ export default function SignInScreen({ setToken }) {
             value={password}
             placeholder="password"
             secureTextEntry={true}
+            autoCapitalize="none"
             style={styles.input}
             onChangeText={(input) => {
               setPassword(input);

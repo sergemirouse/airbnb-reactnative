@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   Image,
   Text,
@@ -14,7 +15,7 @@ import axios, { Axios } from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import logo from "../assets/airbnb_logo.png";
 
-export default function SignUpScreen({ setToken }) {
+export default function SignUpScreen({ userToken, setToken }) {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [description, setDescription] = useState("");
@@ -34,7 +35,9 @@ export default function SignUpScreen({ setToken }) {
         // si le token existe dans la BDD de l'API, alors l'utilisateur est redirigé sur la Screen Home
         setToken(response.data.token);
         alert("Connected");
-        navigation.navigate("Home");
+        if (userToken) {
+          navigation.navigate("TabHome");
+        }
       }
     } catch (error) {
       // si un champs n'est pas rempli et que le message d'erreur se déclenche, un message d'erreur est attitré
@@ -55,6 +58,7 @@ export default function SignUpScreen({ setToken }) {
     }
   };
 
+  const navigation = useNavigation();
   const { height, width } = useWindowDimensions();
 
   return (
@@ -69,6 +73,7 @@ export default function SignUpScreen({ setToken }) {
             value={email}
             placeholder="email"
             style={styles.input}
+            autoCapitalize="none"
             onChangeText={(input) => {
               setEmail(input);
             }}
@@ -85,6 +90,7 @@ export default function SignUpScreen({ setToken }) {
             value={description}
             placeholder="Describe yourself in a few words..."
             numberOfLines={4}
+            multiline={true}
             style={styles.descriptionInput}
             onChangeText={(input) => {
               setDescription(input);
@@ -95,6 +101,7 @@ export default function SignUpScreen({ setToken }) {
             placeholder="password"
             secureTextEntry={true}
             style={styles.input}
+            autoCapitalize="none"
             onChangeText={(input) => {
               setPassword(input);
             }}
@@ -104,6 +111,7 @@ export default function SignUpScreen({ setToken }) {
             placeholder="confirm password"
             secureTextEntry={true}
             style={styles.input}
+            autoCapitalize="none"
             onChangeText={(input) => {
               setPasswordVerif(input);
             }}
@@ -122,7 +130,12 @@ export default function SignUpScreen({ setToken }) {
           >
             <Text style={styles.signUpButtonText}>Sign up</Text>
           </TouchableOpacity>
-          <Text style={styles.signUpText}>
+          <Text
+            style={styles.signUpText}
+            onPress={() => {
+              navigation.navigate("SignIn");
+            }}
+          >
             Already have an account? Sign in
           </Text>
         </View>
@@ -140,14 +153,14 @@ const styles = StyleSheet.create({
   },
 
   signUpFirstSection: {
-    height: "20%",
+    height: "12%",
     width: "100%",
     alignItems: "center",
   },
 
   logo: {
-    maxHeight: "70%",
-    maxWidth: "70%",
+    maxHeight: "100%",
+    maxWidth: "100%",
     resizeMode: "contain",
     justifyContent: "center",
   },
@@ -155,7 +168,7 @@ const styles = StyleSheet.create({
   signUpTitle: {
     width: "100%",
     textAlign: "center",
-    marginTop: "7%",
+    marginTop: "3%",
     fontSize: 26,
     color: "#717171",
     fontWeight: "600",
@@ -164,7 +177,8 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: "100%",
     alignItems: "center",
-    height: "30%",
+    height: "45%",
+    marginTop: "5%",
     flexDirection: "column",
   },
 
@@ -172,13 +186,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: "#FFBAC0",
     width: "80%",
-    height: "20%",
+    height: "15%",
     fontSize: 18,
   },
 
   descriptionInput: {
     textAlign: "left",
-    borderWidth: "2",
+    textAlignVertical: "top",
+    borderWidth: 2,
     borderColor: "#FFBAC0",
     fontSize: 18,
     height: "30%",
@@ -189,8 +204,8 @@ const styles = StyleSheet.create({
   signUpLastSection: {
     width: "100%",
     alignItems: "center",
-    height: "40%",
-    marginTop: "20%",
+    height: "25%",
+    // marginTop: "5%",
   },
 
   signUpErrorMessages: {

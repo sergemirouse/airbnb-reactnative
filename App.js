@@ -4,12 +4,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { Image, StyleSheet } from "react-native-web";
 import HomeScreen from "./containers/HomeScreen";
 import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
 import SplashScreen from "./containers/SplashScreen";
+import logo from "./assets/airbnb_logo.png";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -56,10 +58,10 @@ export default function App() {
           // No token found, user isn't signed in
           <>
             <Stack.Screen name="SignIn">
-              {() => <SignInScreen setToken={setToken} />}
+              {() => <SignInScreen setToken={setToken} userToken={userToken} />}
             </Stack.Screen>
             <Stack.Screen name="SignUp">
-              {() => <SignUpScreen setToken={setToken} />}
+              {() => <SignUpScreen setToken={setToken} userToken={userToken} />}
             </Stack.Screen>
           </>
         ) : (
@@ -76,6 +78,9 @@ export default function App() {
                 <Tab.Screen
                   name="TabHome"
                   options={{
+                    headerBackground: (
+                      <Image style={StyleSheet.absoluteFill} source={logo} />
+                    ),
                     tabBarLabel: "Home",
                     tabBarIcon: ({ color, size }) => (
                       <Ionicons name={"ios-home"} size={size} color={color} />
@@ -86,13 +91,14 @@ export default function App() {
                     <Stack.Navigator>
                       <Stack.Screen
                         name="Home"
-                        options={{
-                          title: "My App",
-                          headerStyle: { backgroundColor: "red" },
-                          headerTitleStyle: { color: "white" },
-                        }}
+                        options={
+                          {
+                            // title: "My App",
+                            // headerTitleStyle: { color: "white" },
+                          }
+                        }
                       >
-                        {() => <HomeScreen />}
+                        {() => <HomeScreen userToken={userToken} />}
                       </Stack.Screen>
 
                       <Stack.Screen
@@ -101,7 +107,7 @@ export default function App() {
                           title: "User Profile",
                         }}
                       >
-                        {() => <ProfileScreen />}
+                        {() => <ProfileScreen userToken={userToken} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
